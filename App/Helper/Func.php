@@ -34,6 +34,18 @@ class Func
 
         return $errors;
     }
+
+    public static function StatusArray($status,$mess,$desc,$token='')
+    {
+        $array = [
+            'STATUS' => $status,
+            'MESSAGE' => $mess,
+            'DESCRIPTION' => $desc,
+            'TOKEN' => $token
+        ];
+
+        return $array;
+    }
     
     
 }

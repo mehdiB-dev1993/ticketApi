@@ -9,7 +9,7 @@ class Acl
     private static $userRoles = array(
         'Admin' => ['Create', 'Read', 'Update', 'Delete','Answer'],
         'Manager' => ['Read', 'Update','Answer'],
-        'Employee' => ['Read','Answer'],
+        'Employee' => ['Create','Read','Answer'],
         'User' => ['Create'],
     );
 

@@ -3,9 +3,12 @@
 namespace App\Controllers;
 
 
+use App\Config\PublicDefine;
 use App\Config\Rs_Config;
 use App\Core\Respond;
+use App\Helper\Func;
 use App\Models\AuthenticationModel;
+use App\Service\Jwt;
 
 
 class AuthenticationController
@@ -16,32 +19,16 @@ class AuthenticationController
         $this->model = new AuthenticationModel();
         $result = $this->model->login();
 
-
-
-        $error = [
-            'STATUS' => '0',
-            'MESSAGE' => 'ورود شما ناموفق بود',
-            'DESCRIPTION' => 'لطفا نام کاربری و رمز عبور خود را چک کنید و سپس دوباره امتحان کنید!'
-        ];
-
         if($result == null) {
-            Respond::Respond($error, Rs_Config::HTTP_NOT_FOUND, Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND]);
+            Respond::Respond(Func::StatusArray(Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND],PublicDefine::$pubDef['ERROR_LOGIN_MESSAGE'],PublicDefine::$pubDef['ERROR_LOGIN_DESCRIPTION']), Rs_Config::HTTP_NOT_FOUND, Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND]);
         }else {
-            $userAcl = $result[0]['ACL'];
-            $userID = $result[0]['userID'];
-            $aliasName = $result[0]['aliasName'];
-            $success = [
-                'STATUS' => '1',
-                'MESSAGE' => 'ورود شما موفقیت آمیز بود',
-                'DESCRIPTION' =>  'را دارید!با توجه به داکیومنت هایی که در اختیار دارید مینوانید عملیت های مورد نظر خودتان را انجام دهید.' . $userAcl. 'گرامی , شما دسترسی برای انجام عملیات های' . $aliasName . 'شما',
-                'TOKEN' => 'ASFAFSAFAFFS5F4A5SF4A65FASAF546ASF456A',
-            ];
 
             session_start();
-            $_SESSION['userID'] = $userID;
-            $_SESSION['userAcl'] = $userAcl;
-            $_SESSION['aliasName'] = $aliasName;
-            Respond::Respond($success, Rs_Config::HTTP_ACCEPTED, Rs_Config::$statusTexts[Rs_Config::HTTP_ACCEPTED]);
+            $_SESSION['userID'] = $result[0]['userID'];
+            $_SESSION['userAcl'] = $result[0]['ACL'];;
+            $_SESSION['aliasName'] = $result[0]['aliasName'];
+            $token = Jwt::Encode();
+            Respond::Respond(Func::StatusArray(Rs_Config::$statusTexts[Rs_Config::HTTP_ACCEPTED],PublicDefine::$pubDef['SUCCESS_MESSAGE'],PublicDefine::$pubDef['SUCCESS_LOGIN_DESCRIPTION'],$token), Rs_Config::HTTP_ACCEPTED, Rs_Config::$statusTexts[Rs_Config::HTTP_ACCEPTED]);
         }
 
     }

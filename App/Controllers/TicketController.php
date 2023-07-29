@@ -2,12 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Config\PublicDefine;
 use App\Config\Rs_Config;
 use App\Core\Acl;
 use App\Core\Respond;
 use App\Helper\Func;
 use App\Models\AuthenticationModel;
 use App\Models\TicketModel;
+use App\Service\Notification;
 
 class TicketController
 
@@ -32,12 +34,8 @@ class TicketController
                 Respond::Respond($result, Rs_Config::HTTP_ACCEPTED, Rs_Config::$statusTexts[Rs_Config::HTTP_ACCEPTED]);
             }
         }
-        $error = [
-            'STATUS' => '0',
-            'MESSAGE' => 'وجود خطا در انجام عملیات',
-            'DESCRIPTION' =>   'شما دسترسی برای انجام این عملیات رو ندارید و در صورت بروز مشکل با مذیر سامانه تماس بگیرید'
-            ];
-        Respond::Respond($error, Rs_Config::HTTP_NOT_FOUND, Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND]);
+
+        Respond::Respond(Func::StatusArray(Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND],PublicDefine::$pubDef['ERROR_MESSAGE'],PublicDefine::$pubDef['ERROR_DESCRIPTION']), Rs_Config::HTTP_NOT_FOUND, Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND]);
 
     }
 
@@ -48,18 +46,13 @@ class TicketController
                 unset($_REQUEST['path']);
                 $result = $this->model->CreateTicket($_REQUEST);
                 Respond::Respond($_REQUEST, Rs_Config::HTTP_CREATED, Rs_Config::$statusTexts[Rs_Config::HTTP_CREATED]);
-                exit();
+                Notification::Send(['manager']);
             }
             Respond::Respond(Func::ValidTicketParam(), Rs_Config::HTTP_BAD_REQUEST, Rs_Config::$statusTexts[Rs_Config::HTTP_BAD_REQUEST]);
         }
 
 
-        $error = [
-            'STATUS' => '0',
-            'MESSAGE' => 'وجود خطا در انجام عملیات',
-            'DESCRIPTION' =>   'شما دسترسی برای انجام این عملیات رو ندارید و در صورت بروز مشکل با مذیر سامانه تماس بگیرید'
-        ];
-        Respond::Respond($error, Rs_Config::HTTP_NOT_FOUND, Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND]);
+        Respond::Respond(Func::StatusArray(Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND],PublicDefine::$pubDef['ERROR_MESSAGE'],PublicDefine::$pubDef['ERROR_DESCRIPTION']), Rs_Config::HTTP_NOT_FOUND, Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND]);
 
 
     }
@@ -76,13 +69,7 @@ class TicketController
             Respond::Respond($result, Rs_Config::HTTP_CREATED, Rs_Config::$statusTexts[Rs_Config::HTTP_CREATED]);
         }
 
-
-        $error = [
-            'STATUS' => '0',
-            'MESSAGE' => 'وجود خطا در انجام عملیات',
-            'DESCRIPTION' =>   'شما دسترسی برای انجام این عملیات رو ندارید و در صورت بروز مشکل با مذیر سامانه تماس بگیرید'
-        ];
-        Respond::Respond($error, Rs_Config::HTTP_NOT_FOUND, Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND]);
+        Respond::Respond(Func::StatusArray(Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND],PublicDefine::$pubDef['ERROR_MESSAGE'],PublicDefine::$pubDef['ERROR_DESCRIPTION']), Rs_Config::HTTP_NOT_FOUND, Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND]);
     }
 
     public function Delete()
@@ -94,12 +81,7 @@ class TicketController
             Respond::Respond($result, Rs_Config::HTTP_CREATED, Rs_Config::$statusTexts[Rs_Config::HTTP_CREATED]);
         }
 
-        $error = [
-            'STATUS' => '0',
-            'MESSAGE' => 'وجود خطا در انجام عملیات',
-            'DESCRIPTION' =>   'شما دسترسی برای انجام این عملیات رو ندارید و در صورت بروز مشکل با مذیر سامانه تماس بگیرید'
-        ];
-        Respond::Respond($error, Rs_Config::HTTP_NOT_FOUND, Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND]);
+        Respond::Respond(Func::StatusArray(Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND],PublicDefine::$pubDef['ERROR_MESSAGE'],PublicDefine::$pubDef['ERROR_DESCRIPTION']), Rs_Config::HTTP_NOT_FOUND, Rs_Config::$statusTexts[Rs_Config::HTTP_NOT_FOUND]);
     }
 
 

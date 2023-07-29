@@ -14,4 +14,5 @@ class Respond
         echo json_encode($data);
 
     }
+
 }

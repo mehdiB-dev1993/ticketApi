@@ -25,10 +25,41 @@ class TicketModel
     public function CreateTicket($data)
     {
 
-        $LastID = $this->db->Create('tickets',$data);
-        $data = array('userID' => 0 ,'ticketID' => $LastID);
+        $ticketID = $this->db->Create('tickets',$data);
+
+        $query = "SELECT ut.userID,u.fullname,COUNT(ut.ticketID) AS CT 
+                    FROM user_ticket ut INNER JOIN users u
+                    ON ut.userID = u.id
+                    GROUP BY ut.userID ORDER BY CT ASC;";
+        $userID = $this->db->Read($query)[0]['userID'];
+
+
+        $data = array('userID' => $userID ,'ticketID' => $ticketID);
         $this->db->Create('user_ticket',$data);
         return 'created!';
+
+
+
+
+
+
+
+
+
+
+
+        $query = "SELECT ut.userID,u.fullname,COUNT(ut.ticketID) AS CT 
+                    FROM user_ticket ut INNER JOIN users u
+                    ON ut.userID = u.id
+                    GROUP BY ut.userID ORDER BY CT ASC;";
+        $userId = $db->Read($query)[0]['userID'];
+
+        $db->Create('user_ticket',['userID' => $userId,'ticketID'=> $id]);
+        return 'send ticket!';
+
+
+
+
     }
 
     public function UpdateTicket($data,$condition)
