@@ -42,24 +42,6 @@ class TicketModel
 
 
 
-
-
-
-
-
-
-        $query = "SELECT ut.userID,u.fullname,COUNT(ut.ticketID) AS CT 
-                    FROM user_ticket ut INNER JOIN users u
-                    ON ut.userID = u.id
-                    GROUP BY ut.userID ORDER BY CT ASC;";
-        $userId = $db->Read($query)[0]['userID'];
-
-        $db->Create('user_ticket',['userID' => $userId,'ticketID'=> $id]);
-        return 'send ticket!';
-
-
-
-
     }
 
     public function UpdateTicket($data,$condition)
